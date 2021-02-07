@@ -1,23 +1,27 @@
 import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 import { CreateUserDto } from './dto/create-user.dto';
 import { GetUserFilterDto } from './dto/get-user-filter.dto';
-import { User, UserRole } from './user.model';
+import { User, UserDocument, UserRole } from './user.model';
 
 @Injectable()
 export class UsersService {
-  private users: User[] = [];
+  constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {
 
-  getAllUsers(): User[] {
-    return this.users;
   }
 
-  getUserById(id: string): User {
-    return this.users.find(user => user.id === id);
+  getAllUsers(): any {
+    // return this.users;
+  }
+
+  getUserById(id: string): any {
+    // return this.users.find(user => user.id === id);
   }
 
   getUsersWithFilter(filtersDto: GetUserFilterDto) {
     const { name, role } = filtersDto;
-    let users = this.users;
+    let users = [];
 
     if (name) {
       users = users.filter(user => user.name === name)
@@ -30,30 +34,31 @@ export class UsersService {
     return users;
   }
 
-  createUser(createUserDto: CreateUserDto): User {
-    const { name, email, password } = createUserDto;
+  async createUser(createUserDto: CreateUserDto): Promise<User> {
+    const { name, email, password, phone } = createUserDto;
     const user: User = {
-      id: `${name}+1`,
       name,
       email,
       password,
+      phone,
       token: '',
       pets: [],
       posts: [],
       role: UserRole.user
     }
 
-    this.users.push(user);
-    return user;
+    const createdUser = new this.userModel(user);
+    // this.users.push(user);
+    return createdUser.save();
   }
 
   updateUser(id: string, createUserDto): void {
-    const user = this.users.find(user => user.id === id);
-    this.users = this.users.filter(user => user.id !== id);
+    // const user = this.users.find(user => user.id === id);
+    // this.users = this.users.filter(user => user.id !== id);
   }
 
   deleteUser(id: string): void {
-    const user = this.users.find(user => user.id === id);
-    this.users = this.users.filter(user => user.id !== id);
+    // const user = this.users.find(user => user.id === id);
+    // this.users = this.users.filter(user => user.id !== id);
   }
 }
