@@ -4,27 +4,27 @@ import { Document } from 'mongoose'
 export type UserDocument = User & Document;
 @Schema()
 export class User {
-  @Prop()
+  @Prop({ required: true })
   name: string;
-  
-  @Prop()
+
+  @Prop({ required: true })
   email: string;
-  
-  @Prop()
+
+  @Prop({ required: true })
   password: string;
-  
+
   @Prop()
   role: UserRole;
-  
+
   @Prop()
   pets: [];
-  
+
   @Prop()
   posts: [];
-  
-  @Prop()
+
+  @Prop({ required: true })
   phone: string;
-  
+
   @Prop()
   token: string;
 };

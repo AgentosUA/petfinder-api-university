@@ -9,7 +9,8 @@ export class UsersController {
   constructor(private userService: UsersService) { }
 
   @Get()
-  getUsers(@Query() filterDto: GetUserFilterDto): User[] {
+  @UsePipes(ValidationPipe)
+  getUsers(@Query() filterDto: GetUserFilterDto): Promise<User[]> {
     if (Object.keys(filterDto).length) {
       return this.userService.getUsersWithFilter(filterDto);
     }
@@ -17,7 +18,8 @@ export class UsersController {
   }
 
   @Get('/:id')
-  getUserById(@Param('id') id: string): User {
+  @UsePipes(ValidationPipe)
+  getUserById(@Param('id') id: string): Promise<User> {
     return this.userService.getUserById(id);
   }
 
@@ -31,12 +33,13 @@ export class UsersController {
   // @Patch('/:id')
   // patchUser(
   //   @Body() CreateUserDto: CreateUserDto,
-  //   @Param() id: string
+  //   @Param('id') id: string
   // ): User {
-  //   return this.userService.updateUser(CreateUserDto);
+  //   return this.userService.updateUser(id);
   // }
 
   @Delete('/:id')
+  @UsePipes(ValidationPipe)
   deleteUser(@Param('id') id: string): void {
     this.userService.deleteUser(id);
   }
