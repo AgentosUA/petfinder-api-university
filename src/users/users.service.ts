@@ -64,14 +64,33 @@ export class UsersService {
     return createdUser.save();
   }
 
-  // TODO
-  // updateUser(id: string, createUserDto): void {
-    // const user = this.users.find(user => user.id === id);
-    // this.users = this.users.filter(user => user.id !== id);
-  // }
+  async updateUser(id: string, createUserDto: CreateUserDto): Promise<User> {
+    if (!Types.ObjectId.isValid(id)) throw new BadRequestException('Невірний ID');
 
-  deleteUser(id: string): void {
-    // const user = this.users.find(user => user.id === id);
-    // this.users = this.users.filter(user => user.id !== id);
+    const { name, email, password } = createUserDto;
+
+    const updateFields: Partial<User> = {};
+
+    if (name) {
+      updateFields.name = name;
+    }
+
+    if (email) {
+      updateFields.email = email;
+    }
+
+    if (password) {
+      updateFields.password = password;
+    }
+
+    const user = await this.userModel.findOneAndUpdate({ _id: id }, updateFields);
+    return user;
+  }
+
+  async deleteUser(id: string): Promise<User> {
+    if (!Types.ObjectId.isValid(id)) throw new BadRequestException('Невірний ID');
+
+    const deletedUser = await this.userModel.deleteOne({ _id: id });
+    return deletedUser;
   }
 }

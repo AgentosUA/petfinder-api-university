@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UsePipes, ValidationPipe } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
+import { CreateUserDto, UpdateUserDto } from './dto/create-user.dto';
 import { GetUserFilterDto } from './dto/get-user-filter.dto';
 import { User } from './user.model';
 import { UsersService } from './users.service';
@@ -29,14 +29,13 @@ export class UsersController {
     return this.userService.createUser(CreateUserDto);
   }
 
-  // TODO
-  // @Patch('/:id')
-  // patchUser(
-  //   @Body() CreateUserDto: CreateUserDto,
-  //   @Param('id') id: string
-  // ): User {
-  //   return this.userService.updateUser(id);
-  // }
+  @Patch('/:id')
+  patchUser(
+    @Body() updateUserDto: UpdateUserDto,
+    @Param('id') id: string
+  ): Promise<User> {
+    return this.userService.updateUser(id, updateUserDto);
+  }
 
   @Delete('/:id')
   @UsePipes(ValidationPipe)
