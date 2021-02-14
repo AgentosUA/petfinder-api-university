@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Mongoose, Types } from 'mongoose';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -64,7 +64,8 @@ export class UsersService {
     return createdUser.save();
   }
 
-  async updateUser(id: string, createUserDto: CreateUserDto): Promise<User> {
+  async updateUser(id: string, createUserDto: CreateUserDto, userAuthData: UserAuthData): Promise<User> {
+    if(userAuthData.userId !== id) throw new UnauthorizedException('Ви не можете редагути дані іншого користувача!');
     if (!Types.ObjectId.isValid(id)) throw new BadRequestException('Невірний ID');
 
     const { name, email, password } = createUserDto;
