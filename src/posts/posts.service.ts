@@ -6,17 +6,17 @@ import { PostDocument } from './post.model';
 @Injectable()
 export class PostsService {
 
-  constructor(@InjectModel('Posts') private postModel: Model<PostDocument>) {}
+  // constructor(@InjectModel('Posts') private postModel: Model<PostDocument>) {}
 
-  async getPosts() {
+  // async getPosts() {
 
-  }
+  // }
 
-  async getPostById(id: string) {
-    if (!Types.ObjectId.isValid(id)) throw new BadRequestException('Невірний ID');
+  // async getPostById(id: string) {
+  //   if (!Types.ObjectId.isValid(id)) throw new BadRequestException('Невірний ID');
 
-    const post = await this.postModel.findById(id);
-    if (!post) throw new NotFoundException('Такого оголошення не існує');
-    return post;
-  }
+  //   const post = await this.postModel.findById(id);
+  //   if (!post) throw new NotFoundException('Такого оголошення не існує');
+  //   return post;
+  // }
 }

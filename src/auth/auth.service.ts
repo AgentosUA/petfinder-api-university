@@ -18,11 +18,12 @@ export class AuthService {
       throw new BadRequestException('Невірна пошта або пароль!');
     }
 
-    const isPasswordValid = await compare(String(password), user.password);
+    const isPasswordValid = await compare(String(password), String(user.password));
     const userAuthData: UserAuthData = {
       email: user.email,
       userId: user._id
     }
+
     if (isPasswordValid) {
       const token = sign(userAuthData, process.env.JWT_KEY, { expiresIn: process.env.JWT_TIME || '1h' });
 
@@ -30,8 +31,10 @@ export class AuthService {
         token,
         expiresIn: new Date().getTime() + 3600
       };
+    } else {
+      throw new BadRequestException('Невірна пошта або пароль!');
     }
 
-    throw new BadRequestException('Невірна пошта або пароль!');
+    
   }
 }

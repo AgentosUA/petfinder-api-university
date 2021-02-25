@@ -26,8 +26,8 @@ export class Post {
   @Prop({ required: true })
   images: string[];
 
-  @Prop({ type: Types.ObjectId(), required: true, ref: 'User' })
-  creator: User;
+  // @Prop({ type: Types.ObjectId(), required: true, ref: 'User' })
+  // creator: User;
 };
 
 export const PostSchema = SchemaFactory.createForClass(Post);
@@ -40,7 +40,7 @@ export interface Post {
   date: Date;
   description: string;
   images: string[];
-  creator: User;
+  // creator: User;
 };
 
 export enum animalType {

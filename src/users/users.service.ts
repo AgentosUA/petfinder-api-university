@@ -4,6 +4,7 @@ import { Model, Mongoose, Types } from 'mongoose';
 import { CreateUserDto } from './dto/create-user.dto';
 import { GetUserFilterDto } from './dto/get-user-filter.dto';
 import { User, UserDocument, UserRole } from './user.model';
+import { hash } from 'bcrypt';
 
 @Injectable()
 export class UsersService {
@@ -48,10 +49,12 @@ export class UsersService {
 
     if (isUserExsists.length) throw new BadRequestException('Користувач вже існує');
 
+    const hashedPassword = await hash(password, 10);
+
     const user: User = {
       name,
       email,
-      password,
+      password: hashedPassword,
       phone,
       token: '',
       pets: [],
@@ -65,7 +68,7 @@ export class UsersService {
   }
 
   async updateUser(id: string, createUserDto: CreateUserDto, userAuthData: UserAuthData): Promise<User> {
-    if(userAuthData.userId !== id) throw new UnauthorizedException('Ви не можете редагути дані іншого користувача!');
+    if(userAuthData.userId !== id) throw new UnauthorizedException('Ви не можете редагувати дані іншого користувача!');
     if (!Types.ObjectId.isValid(id)) throw new BadRequestException('Невірний ID');
 
     const { name, email, password } = createUserDto;

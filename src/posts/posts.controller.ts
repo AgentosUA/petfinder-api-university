@@ -3,7 +3,8 @@ import { PostsService } from './posts.service';
 
 @Controller('posts')
 export class PostsController {
-  constructor(private postService: PostsService) {}
+  // constructor(private postService: PostsService) {}
+  constructor() {}
 
   @Get()
   getPosts() {
@@ -12,6 +13,6 @@ export class PostsController {
 
   @Get('/:id')
   getPostById(@Param('id') id) {
-    return this.postService.getPostById(id);
+    // return this.postService.getPostById(id);
   }
 }
