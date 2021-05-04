@@ -4,8 +4,6 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { PostsController } from './posts/posts.controller';
 import { PostsModule } from './posts/posts.module';
 
 @Module({
@@ -20,7 +18,7 @@ import { PostsModule } from './posts/posts.module';
     AuthModule,
     PostsModule
   ],
-  controllers: [AppController, PostsController],
+  controllers: [AppController],
   providers: [AppService],
 })
 
