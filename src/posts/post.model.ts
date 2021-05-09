@@ -27,7 +27,7 @@ export class Post {
   images: string[];
 
   @Prop({ type: Types.ObjectId, ref: 'User' })
-  creator: Types.ObjectId
+  creator: User
 };
 
 export const PostSchema = SchemaFactory.createForClass(Post);
@@ -40,7 +40,7 @@ export interface Post {
   date: Date;
   description: string;
   images: string[];
-  creator: Types.ObjectId;
+  creator: User;
 };
 
 export enum animalType {

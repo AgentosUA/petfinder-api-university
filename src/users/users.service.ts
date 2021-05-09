@@ -20,7 +20,7 @@ export class UsersService {
   async getUserById(id: string): Promise<User> {
     if (!Types.ObjectId.isValid(id)) throw new BadRequestException('Невірний ID');
 
-    const user = await this.userModel.findById(id);
+    const user = await this.userModel.findById(id).populate('posts');
     if (!user) throw new NotFoundException('Такого користувача не існує');
     return user;
   }
@@ -63,7 +63,7 @@ export class UsersService {
     }
 
     const createdUser = new this.userModel(user);
-    // this.users.push(user);
+
     return createdUser.save();
   }
 

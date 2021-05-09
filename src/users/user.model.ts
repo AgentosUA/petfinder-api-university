@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose'
+import { Document, Types } from 'mongoose'
+import { Post, PostSchema } from 'src/posts/post.model';
 
 export type UserDocument = User & Document;
 @Schema()
@@ -17,10 +18,10 @@ export class User {
   role: UserRole;
 
   @Prop()
-  pets: [];
+  pets: Types.ObjectId[];
 
-  @Prop()
-  posts: [];
+  @Prop({ type: [{ type: Types.ObjectId, ref: 'Post' }] })
+  posts: Post[];
 
   @Prop({ required: true })
   phone: string;
@@ -36,8 +37,8 @@ export interface User {
   email: string;
   password: string;
   role: UserRole;
-  pets: [];
-  posts: [];
+  pets: Types.ObjectId[];
+  posts: Post[];
   phone: string;
   token: string;
 }
