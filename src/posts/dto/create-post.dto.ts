@@ -22,7 +22,10 @@ export class CreatePostDto {
   description: string;
 
   @Prop({ required: true })
-  images: string[];
+  city: string;
+
+  @Prop({ required: true })
+  image: string;
 }
 
 export class UpdatePostDto {

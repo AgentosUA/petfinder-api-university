@@ -12,19 +12,23 @@ export class PostsService {
     @InjectModel('Post') private postModel: Model<PostDocument>,
     @InjectModel('User') private userModel: Model<UserDocument>
   ) { }
-  async getPosts({ type, gender, status, page, limit, date }) {
+  async getPosts({ type, gender, status, page, limit, date, city }) {
     const searchFilters = {} as any;
 
-    if (!page) throw new BadRequestException('Невірна пошта або пароль!');
+    if (!page) throw new BadRequestException('Не вказана сторінка!');
     if (!limit) limit = 10;
-    if (type) searchFilters.type = type;
-    if (gender) searchFilters.gender = gender;
-    if (status) searchFilters.status = status;
-    if (date) searchFilters.date = date;
+    if (type && type !== 'all' && type !== 'undefined') searchFilters.type = type;
+    if (gender && gender !== 'all' && gender !== 'undefined') searchFilters.gender = gender;
+    if (status && status !== 'all' && status !== 'undefined') searchFilters.status = status;
+    if (date && date !== 'all' && date !== 'undefined') searchFilters.date = date;
+    if (city && city !== 'all' && city !== 'undefined') searchFilters.city = city;
 
     const posts = await this.postModel.find().where(searchFilters).skip(page * limit - limit || 0).limit(limit).sort({ date: 'asc' });
-
-    return posts;
+    const totalCount = (await this.postModel.find().where(searchFilters))?.length
+    return {
+      posts: posts,
+      totalCount
+    };
   }
 
   async getPostById(id: string) {
@@ -36,16 +40,19 @@ export class PostsService {
   }
 
   async createPost(createPostDto: CreatePostDto, userId): Promise<Post> {
-    const { name, date, description, gender, type, status, images } = createPostDto;
+    const { name, date, description, gender, type, status, image, city } = createPostDto;
+
+    if (!name || !date || !description || !gender || !type || !status || !image || !city) throw new BadRequestException('Не всі поля вказані!');
 
     const post: Post = {
       name,
       date,
       description,
       gender,
-      images,
+      image,
       status,
       type,
+      city,
       creator: userId
     }
 

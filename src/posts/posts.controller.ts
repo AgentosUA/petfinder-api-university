@@ -15,9 +15,11 @@ export class PostsController {
     @Query('status') status,
     @Query('page') page,
     @Query('limit') limit,
-    @Query('date') date) {
+    @Query('date') date,
+    @Query('city') city
+    ) {
 
-    return this.postService.getPosts({ type, gender, status, page: Number(page), limit: Number(limit), date});
+    return this.postService.getPosts({ type, gender, status, page: Number(page), limit: Number(limit), date, city});
   }
 
   @Get('/:id')
@@ -27,8 +29,8 @@ export class PostsController {
 
   @Post()
   @UseGuards(new AuthGuard())
-  createPost(@Body() { name, date, description, gender, type, status, images }, @AuthData() authData: UserAuthData) {
-    return this.postService.createPost({ name, date, description, gender, type, status, images }, authData.userId)
+  createPost(@Body() { name, date, description, gender, type, status, image, city }, @AuthData() authData: UserAuthData) {
+    return this.postService.createPost({ name, date, description, gender, type, status, image, city }, authData.userId)
   }
 
   @Delete('/:id')

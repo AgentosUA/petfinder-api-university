@@ -14,7 +14,7 @@ export class Post {
   @Prop({ required: true })
   status: animalStatus;
 
-  @Prop()
+  @Prop({ required: true })
   gender: animalGender;
 
   @Prop({ required: true })
@@ -24,7 +24,10 @@ export class Post {
   description: string;
 
   @Prop({ required: true })
-  images: string[];
+  image: string;
+
+  @Prop({ required: true })
+  city: string;
 
   @Prop({ type: Types.ObjectId, ref: 'User' })
   creator: User
@@ -39,7 +42,8 @@ export interface Post {
   gender: animalGender;
   date: Date;
   description: string;
-  images: string[];
+  image: string;
+  city: string;
   creator: User;
 };
 
