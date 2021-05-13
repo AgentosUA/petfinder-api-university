@@ -26,7 +26,7 @@ export class PostsService {
     const posts = await this.postModel.find().where(searchFilters).skip(page * limit - limit || 0).limit(limit).sort({ date: 'asc' });
     const totalCount = (await this.postModel.find().where(searchFilters))?.length
     return {
-      posts: posts,
+      posts,
       totalCount
     };
   }

@@ -29,7 +29,7 @@ export class AuthService {
 
       return {
         token,
-        expiresIn: new Date().getTime() + 3600
+        expiresIn: Math.round(+new Date()/1000) + 3600,
       };
     } else {
       throw new BadRequestException('Невірна пошта або пароль!');
