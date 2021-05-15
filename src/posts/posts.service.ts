@@ -21,7 +21,7 @@ export class PostsService {
     if (gender && gender !== 'all' && gender !== 'undefined') searchFilters.gender = gender;
     if (status && status !== 'all' && status !== 'undefined') searchFilters.status = status;
     if (date && date !== 'all' && date !== 'undefined') searchFilters.date = date;
-    if (city && city !== 'all' && city !== 'undefined') searchFilters.city = city;
+    if (city && city !== 'all' && city !== 'undefined') searchFilters.city = new RegExp(city, 'i');
 
     const posts = await this.postModel.find().where(searchFilters).skip(page * limit - limit || 0).limit(limit).sort({ date: 'asc' });
     const totalCount = (await this.postModel.find().where(searchFilters))?.length
