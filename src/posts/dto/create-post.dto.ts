@@ -25,7 +25,7 @@ export class CreatePostDto {
   city: string;
 
   @Prop({ required: true })
-  image: string;
+  image: any;
 }
 
 export class UpdatePostDto {

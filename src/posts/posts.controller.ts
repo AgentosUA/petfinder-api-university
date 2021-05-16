@@ -1,4 +1,5 @@
-import { Body, Controller, Get, Param, Post, UseGuards, Delete, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards, Delete, Query, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { AuthData } from 'src/shared/auth.decorator';
 import { AuthGuard } from 'src/shared/auth.guard';
 import { CreatePostDto } from './dto/create-post.dto';
@@ -17,9 +18,9 @@ export class PostsController {
     @Query('limit') limit,
     @Query('date') date,
     @Query('city') city
-    ) {
+  ) {
 
-    return this.postService.getPosts({ type, gender, status, page: Number(page), limit: Number(limit), date, city});
+    return this.postService.getPosts({ type, gender, status, page: Number(page), limit: Number(limit), date, city });
   }
 
   @Get('/:id')
@@ -29,7 +30,8 @@ export class PostsController {
 
   @Post()
   @UseGuards(new AuthGuard())
-  createPost(@Body() { name, date, description, gender, type, status, image, city }, @AuthData() authData: UserAuthData) {
+  @UseInterceptors(FileInterceptor('image'))
+  createPost(@UploadedFile() image, @Body() { name, date, description, gender, type, status, city }, @AuthData() authData: UserAuthData) {
     return this.postService.createPost({ name, date, description, gender, type, status, image, city }, authData.userId)
   }
 

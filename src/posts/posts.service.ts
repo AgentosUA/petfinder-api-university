@@ -1,10 +1,10 @@
-import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { UserDocument } from 'src/users/user.model';
 import { CreatePostDto } from './dto/create-post.dto';
 import { PostDocument, Post } from './post.model';
-
+import { uploadFile, deleteFile } from '../shared/google-storage';
 @Injectable()
 export class PostsService {
 
@@ -44,12 +44,15 @@ export class PostsService {
 
     if (!name || !date || !description || !gender || !type || !status || !image || !city) throw new BadRequestException('Не всі поля вказані!');
 
+    const imageUrl = await uploadFile(image, `images/${type || 'other'}`)
+    if (!imageUrl) throw new InternalServerErrorException('Не вдалось завантажити зображення на Google Cloud!')
+
     const post: Post = {
       name,
       date,
       description,
       gender,
-      image,
+      image: imageUrl,
       status,
       type,
       city,
@@ -64,9 +67,10 @@ export class PostsService {
 
   async deletePost(postId, userId) {
     const post = await this.postModel.findById(postId);
+    if (!post) throw new NotFoundException('Оголошення не знайдено!');
+    if (post.creator !== userId) throw new UnauthorizedException('Ви не можете видаляти дані чужої тваринки!');
 
-    if (post.creator !== userId) throw new UnauthorizedException('Ви не можете редагувати дані чужої тваринки!');
-
+    await deleteFile(post.image);
     await post.delete();
     await this.userModel.findByIdAndUpdate(userId, { $pull: { "posts": postId } });
   }
