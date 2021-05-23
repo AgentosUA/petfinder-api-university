@@ -10,6 +10,13 @@ import { UsersService } from './users.service';
 export class UsersController {
   constructor(private userService: UsersService) { }
 
+  @Get('/profile')
+  @UsePipes(ValidationPipe)
+  @UseGuards(new AuthGuard())
+  getProfile(@AuthData() authData: UserAuthData): Promise<User> {
+    return this.userService.getUserById(authData.userId);
+  }
+
   @Get()
   @UsePipes(ValidationPipe)
   getUsers(@Query() filterDto: GetUserFilterDto): Promise<User[]> {
@@ -27,6 +34,7 @@ export class UsersController {
 
   @Post()
   @UsePipes(ValidationPipe)
+  @UseGuards(new AuthGuard())
   createUser(@Body() CreateUserDto: CreateUserDto): Promise<User> {
     return this.userService.createUser(CreateUserDto);
   }

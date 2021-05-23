@@ -16,7 +16,7 @@ export class PostsService {
     const searchFilters = {} as any;
 
     if (!page) throw new BadRequestException('Не вказана сторінка!');
-    if (!limit) limit = 10;
+    if (!limit) limit = 9;
     if (type && type !== 'all' && type !== 'undefined') searchFilters.type = type;
     if (gender && gender !== 'all' && gender !== 'undefined') searchFilters.gender = gender;
     if (status && status !== 'all' && status !== 'undefined') searchFilters.status = status;
@@ -27,7 +27,8 @@ export class PostsService {
     const totalCount = (await this.postModel.find().where(searchFilters))?.length
     return {
       posts,
-      totalCount
+      totalCount,
+      limit
     };
   }
 
