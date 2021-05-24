@@ -34,7 +34,6 @@ export class UsersController {
 
   @Post()
   @UsePipes(ValidationPipe)
-  @UseGuards(new AuthGuard())
   createUser(@Body() CreateUserDto: CreateUserDto): Promise<User> {
     return this.userService.createUser(CreateUserDto);
   }
@@ -50,6 +49,7 @@ export class UsersController {
   }
 
   @Delete('/:id')
+  @UseGuards(new AuthGuard())
   @UsePipes(ValidationPipe)
   deleteUser(@Param('id') id: string): void {
     this.userService.deleteUser(id);
