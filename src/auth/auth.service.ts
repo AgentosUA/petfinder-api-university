@@ -21,20 +21,19 @@ export class AuthService {
     const isPasswordValid = await compare(String(password), String(user.password));
     const userAuthData: UserAuthData = {
       email: user.email,
-      userId: user._id
-    }
+      userId: user._id,
+    };
 
     if (isPasswordValid) {
-      const token = sign(userAuthData, process.env.JWT_KEY, { expiresIn: process.env.JWT_TIME || '1h' });
+      const expiresIn = Number(process.env.JWT_TIME) || 3600;
+      const token = sign(userAuthData, process.env.JWT_KEY, { expiresIn });
 
       return {
         token,
-        expiresIn: Math.round(+new Date()/1000) + 3600,
+        expiresIn: Math.round(+new Date() / 1000) + expiresIn,
       };
     } else {
       throw new BadRequestException('Невірна пошта або пароль!');
     }
-
-    
   }
 }
