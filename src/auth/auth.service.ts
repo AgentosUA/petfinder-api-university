@@ -18,7 +18,11 @@ export class AuthService {
       throw new BadRequestException('Невірна пошта або пароль!');
     }
 
-    const isPasswordValid = await compare(String(password), String(user.password));
+    const isPasswordValid = await compare(
+      String(password),
+      String(user.password),
+    );
+
     const userAuthData: UserAuthData = {
       email: user.email,
       userId: user._id,
