@@ -1,4 +1,9 @@
-import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Mongoose, Types } from 'mongoose';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -8,9 +13,7 @@ import { hash } from 'bcrypt';
 
 @Injectable()
 export class UsersService {
-  constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {
-
-  }
+  constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
 
   async getAllUsers(): Promise<User[]> {
     const users = this.userModel.find().limit(20);
@@ -18,9 +21,12 @@ export class UsersService {
   }
 
   async getUserById(id: string): Promise<User> {
-    if (!Types.ObjectId.isValid(id)) throw new BadRequestException('Невірний ID');
+    if (!Types.ObjectId.isValid(id))
+      throw new BadRequestException('Невірний ID');
 
-    const user = await this.userModel.findById(id).populate('posts');
+    const user = await this.userModel
+      .findById(id, 'name pets posts role phone')
+      .populate('posts');
     if (!user) throw new NotFoundException('Такого користувача не існує');
     return user;
   }
@@ -47,7 +53,8 @@ export class UsersService {
 
     const isUserExsists = await this.userModel.find({ email });
 
-    if (isUserExsists.length) throw new BadRequestException('Користувач вже існує');
+    if (isUserExsists.length)
+      throw new BadRequestException('Користувач вже існує');
 
     const hashedPassword = await hash(password, 10);
 
@@ -59,17 +66,26 @@ export class UsersService {
       token: '',
       pets: [],
       posts: [],
-      role: UserRole.user
-    }
+      role: UserRole.user,
+    };
 
     const createdUser = new this.userModel(user);
 
     return createdUser.save();
   }
 
-  async updateUser(id: string, createUserDto: CreateUserDto, userAuthData: UserAuthData): Promise<User> {
-    if(userAuthData.userId !== id) throw new UnauthorizedException('Ви не можете редагувати дані іншого користувача!');
-    if (!Types.ObjectId.isValid(id)) throw new BadRequestException('Невірний ID');
+  async updateUser(
+    id: string,
+    createUserDto: CreateUserDto,
+    userAuthData: UserAuthData,
+  ): Promise<User> {
+    if (userAuthData.userId !== id)
+      throw new UnauthorizedException(
+        'Ви не можете редагувати дані іншого користувача!',
+      );
+
+    if (!Types.ObjectId.isValid(id))
+      throw new BadRequestException('Невірний ID');
 
     const { name, email, password } = createUserDto;
 
@@ -87,12 +103,17 @@ export class UsersService {
       updateFields.password = password;
     }
 
-    const user = await this.userModel.findOneAndUpdate({ _id: id }, updateFields);
+    const user = await this.userModel.findOneAndUpdate(
+      { _id: id },
+      updateFields,
+    );
+
     return user;
   }
 
   async deleteUser(id: string): Promise<User> {
-    if (!Types.ObjectId.isValid(id)) throw new BadRequestException('Невірний ID');
+    if (!Types.ObjectId.isValid(id))
+      throw new BadRequestException('Невірний ID');
 
     const deletedUser = await this.userModel.deleteOne({ _id: id });
     return deletedUser;
