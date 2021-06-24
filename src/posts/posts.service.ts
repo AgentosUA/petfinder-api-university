@@ -20,7 +20,7 @@ export class PostsService {
   async getPosts({ type, gender, status, page, limit, date, city }) {
     const searchFilters = {} as any;
 
-    if (!page) throw new BadRequestException('Не вказана сторінка!');
+    if (!page) page = 1;
 
     if (!limit) limit = 9;
 
