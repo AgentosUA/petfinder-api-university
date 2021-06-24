@@ -1,3 +1,4 @@
+import { Optional } from '@nestjs/common';
 import { Prop } from '@nestjs/mongoose';
 import { IsNotEmpty, IsOptional } from 'class-validator';
 import { animalGender, animalStatus, animalType } from '../post.model';
@@ -29,15 +30,30 @@ export class CreatePostDto {
 }
 
 export class UpdatePostDto {
-  @IsOptional()
+  @Prop({ required: true })
+  id: any;
+
+  @Optional()
   name: string;
-  
-  @IsOptional()
-  email: string;
 
-  @IsOptional()
-  password: string;
+  @Optional()
+  type: animalType;
 
-  @IsOptional()
-  phone: string;
+  @Optional()
+  status: animalStatus;
+
+  @Optional()
+  gender: animalGender;
+
+  @Optional()
+  date: Date;
+
+  @Optional()
+  description: string;
+
+  @Optional()
+  city: string;
+
+  @Optional()
+  image: any;
 }

@@ -43,7 +43,7 @@ export class UsersController {
   patchUser(
     @Body() updateUserDto: UpdateUserDto,
     @Param('id') id: string,
-    @AuthData() authData: UserAuthData
+    @AuthData() authData: UserAuthData,
   ): Promise<User> {
     return this.userService.updateUser(id, updateUserDto, authData);
   }
