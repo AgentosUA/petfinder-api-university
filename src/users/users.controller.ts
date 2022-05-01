@@ -48,10 +48,10 @@ export class UsersController {
     return this.userService.updateUser(id, updateUserDto, authData);
   }
 
-  @Delete('/:id')
-  @UseGuards(new AuthGuard())
-  @UsePipes(ValidationPipe)
-  deleteUser(@Param('id') id: string): void {
-    this.userService.deleteUser(id);
-  }
+  // @Delete('/:id')
+  // @UseGuards(new AuthGuard())
+  // @UsePipes(ValidationPipe)
+  // deleteUser(@Param('id') id: string): void {
+  //   this.userService.deleteUser(id);
+  // }
 }

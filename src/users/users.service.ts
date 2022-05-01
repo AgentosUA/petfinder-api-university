@@ -10,6 +10,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { GetUserFilterDto } from './dto/get-user-filter.dto';
 import { User, UserDocument, UserRole } from './user.model';
 import { hash } from 'bcrypt';
+import { DeleteResult } from 'typeorm';
 
 @Injectable()
 export class UsersService {
@@ -111,11 +112,14 @@ export class UsersService {
     return user;
   }
 
-  async deleteUser(id: string): Promise<User> {
+  async deleteUser(id: string): Promise<DeleteResult> {
     if (!Types.ObjectId.isValid(id))
       throw new BadRequestException('Невірний ID');
 
     const deletedUser = await this.userModel.deleteOne({ _id: id });
-    return deletedUser;
+
+    return {
+      raw: '',
+    };
   }
 }

@@ -10,16 +10,15 @@ import { PostsModule } from './posts/posts.module';
   imports: [
     MongooseModule.forRootAsync({
       useFactory: () => ({
-        useFindAndModify: false,
-        uri: process.env.DATABASE_URL
-      })
+        uri: process.env.DATABASE_URL,
+        useNewUrlParser: true,
+      }),
     }),
     UsersModule,
     AuthModule,
-    PostsModule
+    PostsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-
 export class AppModule {}
